@@ -8,9 +8,11 @@
 
 // Put your code here.
 
+
+
 @2 // if R2 is positive or zero then jump straight to loop
 D=M
-@LOOP
+@SWAP
 D;JGE
 
 @1 // if R2 is negative negate both R1...
@@ -19,6 +21,29 @@ M=M+1
 @2 // ...and R2
 M=!M
 M=M+1
+
+(SWAP) // if magnitude of R1 < R2, then swap R1 and R2
+@1
+
+D=M // find magnitude of R1
+@SKIP
+D;JGE
+D=!D
+D=D+1
+(SKIP)
+
+@2
+D=D-M
+@LOOP
+D;JGE
+@2
+D=D+M
+D=D+M
+M=D-M
+@1
+M=D-M
+
+0;JMP
 
 (LOOP) // add R1 to D R2 times
 
