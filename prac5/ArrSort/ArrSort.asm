@@ -22,12 +22,47 @@ D=M
 @1 // find index
 A=M+D
 
+//comparison section
+D=M // if both numbers are negative, jump to COMP
+A=A+1
+D=D&M
+@COMP
+D;JLT
+
+@R0
+D=M
+@1 // find index
+A=M+D
+
+D=M // if both numbers are positive, jump to COMP
+A=A+1
+D=D|M
+@COMP
+D;JGT
+
+(NCHECK) // if index value positive, jump to SWAP; else jump to SKIP
+@R0
+D=M
+@1 // find index
+A=M+D
+D=M
+@SWAP
+D;JGE
+@SKIP
+0;JMP
+
+(COMP)
+@R0
+D=M
+@1 // find index
+A=M+D
 D=M // if next element is lesser, then swap. 
 A=A+1
 D=M-D
 @SWAP
 D;JLT
 
+(SKIP)
 @R0 //Else continue traversing until end of array
 M=M+1
 

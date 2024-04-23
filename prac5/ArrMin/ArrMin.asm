@@ -14,6 +14,31 @@ M=D
 @1 // access current index in array
 A=M
 
+D=M // if both numbers are negative, jump to COMP
+@0
+D=D&M
+@COMP
+D;JLT
+
+@1 // if current index is negative, set it to as new min value; else jump to PCHECK
+A=M 
+D=M 
+@PCHECK
+D;JGE
+@0
+M=D
+@SKIP
+0;JMP
+
+(PCHECK) //if min value negative, jump to skip; else continue
+@0
+D=M
+@SKIP
+D;JLT
+
+(COMP)
+@1
+A=M
 D=M // check if accessed index has the current lowest value. If not, jumps to SKIP
 @0
 D=D-M
