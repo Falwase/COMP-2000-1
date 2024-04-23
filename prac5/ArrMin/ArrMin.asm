@@ -11,30 +11,33 @@ M=D
 
 (LOOP)
 
+@R0 // fetch min val
+D=M
+
+@SETR4 // set R4
+D;JGE
+@R4
+M=1
+(R4SET)
+
 @1 // access current index in array
 A=M
-
-D=M // if both numbers are negative, jump to COMP
-@0
-D=D&M
-@COMP
-D;JLT
-
-@1 // if current index is negative, set it to as new min value; else jump to PCHECK
-A=M 
-D=M 
-@PCHECK
-D;JGE
-@0
-M=D
-@SKIP
-0;JMP
-
-(PCHECK) //if min value negative, jump to skip; else continue
-@0
 D=M
-@SKIP
+
+@SETR5 // set R5
+D;JGE
+@R5
+M=1
+(R5SET)
+
+@R4 // if R4 is + and R5 is -, jump to SWAP; else if R4 is - and R5 is +, jump to PASS; else, continue
+D=M
+@R5
+D=D-M
+@SWAP
 D;JLT
+@SKIP
+D;JGT
 
 (COMP)
 @1
@@ -45,6 +48,7 @@ D=D-M
 @SKIP
 D;JGT
 
+(SWAP)
 @0 // sets new lowest value to R0
 D=D+M
 M=D
@@ -59,7 +63,20 @@ M=M-1
 D=M
 @LOOP
 D;JNE
-
 @END
+0;JMP
+
+(SETR4)
+@R4
+M=0
+@R4SET
+0;JMP
+
+(SETR5)
+@R5
+M=0
+@R5SET
+0;JMP
+
 (END)
 0;JMP
