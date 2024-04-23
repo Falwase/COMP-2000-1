@@ -29,10 +29,12 @@ M=D
 @1 // increment array index
 M=M+1
 
-@2 // decrement length and jumps to LOOP if length is not zero
+@2 // decrement length and jumps to LOOP if length is not one
 M=M-1
 D=M
 @LOOP
 D;JNE
 
+@END
+(END)
 0;JMP
