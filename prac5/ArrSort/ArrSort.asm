@@ -1,108 +1,104 @@
 // Sorts the array of length R2 whose first element is at RAM[R1] in ascending order in place. Sets R0 to True (-1) when complete.
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
-// R3 for current index
+// R3 for i
+// R4 for key
+// R5 for j
 
 // Put your code here.
 
-(LOOP)
-@R1 // R3 is used to track current index, initialise R3 at R1 
-D=M
-@R3
-M=D
+// void insertionSort(int arr[], int n)
+// {
+//    int i, key, j;
 
-(SORT)
-@R2 // checks if end of array is reached
+@R3 
+M=1 //    (i = 1;)
+(FORLOOP) //    for (i = 1;i < n; i++) {
+@R3
+D=M
+@R2
+D=M-D
+@FORSKIP 
+D;JLE //    (i < n;)
+@R3
+D=M 
+@R1
+A=M+D 
+D=M
+@R4
+M=D //        key = arr[i];
+@R3
+D=M
+@R5 
+M=D-1 //        j = i - 1;
+//
+//        /* Move elements of arr[0..i-1], that are
+//          greater than key, to one position ahead
+//          of their current position */
+(WHILELOOP) //        while (j >= 0 && arr[j] > key) {
+@R5
+D=M
+@WHILESKIP
+D;JLT //        (j >= 0 &&)
+@R4
+D=M
+@NEG
+D;JLT
+@R1 // key >= 0
+D=M
+@R5
+A=D+M
+D=M
+@WHILESKIP
+D;JLT
+@R4
+D=D-M
+@WHILESKIP
+D;JLE //        (arr[j] > key)
+(IFGREATER)
+@R5
 D=M
 @R1
-D=D+M
-@R3
-D=D-M
-D=D-1
-@ARRAYEND
-D;JEQ
-
-@R3 // find current index
-A=M
-D=M
-
-@SETR4 // set R4
-D;JGE
-@R4
-M=1
-(R4SET)
-
-@R3 // find next index
-A=M+1
-D=M
-
-@SETR5 // set R5
-D;JGE
-@R5
-M=1
-(R5SET)
-
-@R4 // if R4 is + and R5 is -, jump to SWAP; else if R4 is - and R5 is +, jump to PASS; else, continue
-D=M
-@R5
-D=D-M
-@SWAP
-D;JLT
-@PASS
-D;JGT
-
-@R3 // if R4 > R5, jump to SWAP; else continue
-A=M
+A=M+D
 D=M
 A=A+1
-D=D-M
-@SWAP
-D;JGT
-
-(PASS) // increment index
-@R3
-M=M+1
-@SORT
-0;JMP
-
-(SETR4)
-@R4
-M=0
-@R4SET
-0;JMP
-
-(SETR5)
+M=D //            arr[j + 1] = arr[j];
+@R5 
+M=M-1 //            j = j - 1;
+@WHILELOOP
+0;JMP //        }
+(WHILESKIP)
+@R1
+D=M
 @R5
-M=0
-@R5SET
-0;JMP
-
-(SWAP) // swaps two adjacent elements in the list
-@R3
-A=M
-D=M
-A=A+1
 D=D+M
-M=D-M
-A=A-1
-M=D-M
-@PASS
-0;JMP
-
-(ARRAYEND) // handles end of array; if R2 = 1, jump to ENDSORT; else jump to LOOP
-@R2
-M=M-1
-D=M
-D=D-1
-@ENDSORT
-D;JEQ
-@LOOP
-0;JMP
-
-(ENDSORT)
+D=D+1
+@R4
+D=D+M
+A=D-M
+M=D-A //        arr[j + 1] = key;
+@R3
+M=M+1 //    (i++;)
+@FORLOOP 
+0;JMP//    }
+(FORSKIP)
 @R0
 M=0
 M=M-1
-
 @END
 (END)
+0;JMP //}
+
+(NEG) // if key < 0
+@R1
+D=M
+@R5
+A=D+M
+D=M
+@IFGREATER
+D;JGE
+@R4
+D=D-M
+@IFGREATER
+D;JGT
+@WHILESKIP
 0;JMP
