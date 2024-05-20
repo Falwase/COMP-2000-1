@@ -2,9 +2,18 @@
 // x & y are static variables
 
 // Put your code here.
-push local 0;
-push local 1;
 
+push static 0
+
+push static 0
+push constant 0
+gt
+if-goto JUMP
+
+neg
+
+label JUMP
+pop static 1
 
 label END
 goto END
