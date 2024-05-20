@@ -4,7 +4,52 @@
 
 // Put your code here.
 
+//pop x and y to temp
+push static 0
+pop temp 0
+push static 1
+pop temp 1
 
+//if y > 0, SKIP
+push static 1
+push constant 0
+gt
+if-goto SKIP
+
+//else neg x and y and pop to temp
+push static 0
+neg
+pop temp 0
+push static 1
+neg
+pop temp 1
+
+label SKIP
+
+push constant 0
+label LOOP
+
+//if y = 0, JUMP
+push temp 1
+push constant 0
+eq
+if-goto JUMP
+
+//add x
+push temp 0
+add
+
+//y = y - 1
+push temp 1
+push constant 1
+sub
+pop temp 1
+
+goto LOOP
+
+label JUMP
+
+pop local 0
 
 label END
 goto END
