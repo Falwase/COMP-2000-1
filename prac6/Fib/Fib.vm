@@ -3,3 +3,51 @@
 
 // Put your code here.
 
+function Fib.fib 1
+
+//let fib = 1;
+push constant 1
+pop local 0
+
+//if n = 1, END
+push argument 0
+push constant 1
+eq
+if-goto IFEND
+
+//if n = 0, fib = 0 then end
+push argument 0
+push constant 0
+eq
+not
+if-goto IFNEQ
+
+//fib = 0
+push constant 0
+pop local 0
+goto IFEND
+
+label IFNEQ
+
+//call Fib.fib(fib - 1)
+push argument 0
+push constant 1
+sub
+call Fib.fib 1
+
+//call Fib.fib(fib - 2)
+push argument 0
+push constant 2
+sub
+call Fib.fib 1
+
+//add both functions up
+add
+
+//return sum
+pop local 0
+
+label IFEND
+
+push local 0
+return
