@@ -81,7 +81,14 @@ string VMTranslator::vm_pop(string segment, int offset){
 
 /** Generate Hack Assembly code for a VM add operation */
 string VMTranslator::vm_add(){
-    return "";
+    /*
+    @SP
+    AM=M-1
+    D=M
+    A=A-1
+    M=D+M
+    */
+    return "@SP\nAM=M-1\nD=M\nA=A-1\nM=D+M\n";
 }
 
 /** Generate Hack Assembly code for a VM sub operation */
@@ -101,12 +108,15 @@ string VMTranslator::vm_eq(){
 
 /** Generate Hack Assembly code for a VM gt operation */
 string VMTranslator::vm_gt(){
-    return "";
+
+    return "@SP\nAM=M-1\nA=A-1\nD=M\nA=A+1\nD=D-M\n@GREATER\nD;JGT\n@SP\nA=M-1\nM=0\n@EXIT\n0;JMP\n(GREATER)\n@SP\nA=M-1\nM=0\nM=M-1\n(EXIT)\n";
 }
 
 /** Generate Hack Assembly code for a VM lt operation */
 string VMTranslator::vm_lt(){
-    return "";
+
+    return "@SP\nAM=M-1\nA=A-1\nD=M\nA=A+1\nD=D-M\n@LESSER\nD;JLT\n@SP\nA=M-1\nM=0\n@EXIT\n0;JMP\n(LESSER)\n@SP\nA=M-1\nM=0\nM=M-1\n(EXIT)\n";
+
 }
 
 /** Generate Hack Assembly code for a VM and operation */
@@ -126,17 +136,24 @@ string VMTranslator::vm_not(){
 
 /** Generate Hack Assembly code for a VM label operation */
 string VMTranslator::vm_label(string label){
-    return "";
+    return "(" + label + ")\n";
 }
 
 /** Generate Hack Assembly code for a VM goto operation */
 string VMTranslator::vm_goto(string label){
-    return "";
+    return "@" + label + "\n0;JMP\n";
 }
 
 /** Generate Hack Assembly code for a VM if-goto operation */
 string VMTranslator::vm_if(string label){
-    return "";
+    /*
+    @SP
+    AM=M-1
+    D=M
+    @(label)
+    D;JNE
+    */
+    return "@SP\nAM=M-1\nD=M\n@" + label + "\nD;JNE\n";
 }
 
 /** Generate Hack Assembly code for a VM function operation */

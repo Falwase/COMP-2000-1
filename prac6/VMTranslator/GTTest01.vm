@@ -1,0 +1,4 @@
+push constant 20
+push constant 2
+gt
+pop local 0
