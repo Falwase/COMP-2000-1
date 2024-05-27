@@ -1,0 +1,17 @@
+push constant 0
+pop local 1
+
+label LOOP
+push local 1
+push constant 3
+lt
+
+push local 1
+push constant 1
+add
+pop local 1
+
+if-goto LOOP
+
+push local 1
+pop local 0

@@ -1,0 +1,12 @@
+
+push constant 1
+
+if-goto jump
+
+label end 
+goto end
+
+label jump
+
+push constant 4
+pop local 0

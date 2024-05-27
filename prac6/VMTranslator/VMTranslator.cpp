@@ -108,6 +108,7 @@ string VMTranslator::vm_eq(){
 
 /** Generate Hack Assembly code for a VM gt operation */
 string VMTranslator::vm_gt(){
+    
 
     return "@SP\nAM=M-1\nA=A-1\nD=M\nA=A+1\nD=D-M\n@GREATER\nD;JGT\n@SP\nA=M-1\nM=0\n@EXIT\n0;JMP\n(GREATER)\n@SP\nA=M-1\nM=0\nM=M-1\n(EXIT)\n";
 }

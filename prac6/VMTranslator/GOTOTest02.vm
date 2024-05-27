@@ -1,0 +1,8 @@
+push constant 1
+
+label END
+goto REALEND
+goto END
+
+label REALEND
+pop local 0

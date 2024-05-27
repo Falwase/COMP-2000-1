@@ -1,0 +1,9 @@
+push constant 1
+push constant 2
+push constant 0
+push constant 3
+
+label LOOP
+pop local 0
+
+if-goto LOOP

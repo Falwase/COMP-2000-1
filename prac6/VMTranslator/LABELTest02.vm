@@ -1,0 +1,12 @@
+push constant 0
+pop local 0
+
+goto SKIP
+push constant 10
+pop local 0
+
+label SKIP
+push local 0
+push constant 3
+add
+pop local 0

@@ -1,0 +1,9 @@
+push constant 0
+pop local 0
+
+goto END
+
+push constant 999
+pop local 0
+
+label END
