@@ -3,8 +3,51 @@
 
 // Put your code here.
 
-function ArrMax.arrmax 2
+function ArrMax.arrMax 2
 
-//
+//int i = 0
+push constant 0
+pop local 1
 
+//max = 0
+push constant 0
+pop local 0
+
+label LOOP
+
+//if i = b, END
+push local 1
+push argument 1
+eq
+if-goto END
+
+//b = b + 1
+push local 1
+push constant 1
+add
+pop local 1
+
+//pointer = a + i
+push argument 0
+push local 1
+add
+pop pointer 1
+
+//if that > max, max = that
+push that 0
+push local 0
+gt
+not
+if-goto LOOP
+
+//max = that
+push that 0
+pop local 0
+
+//loop
+goto LOOP
+
+label END
+
+push local 0
 return
