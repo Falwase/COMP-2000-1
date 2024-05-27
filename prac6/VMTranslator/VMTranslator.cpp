@@ -46,11 +46,36 @@ string VMTranslator::vm_push(string segment, int offset){
         return "@" + to_string(offset) + "\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n";
     }
 
-    return "\n//segment not recognised";
+    return "";
 }
 
 /** Generate Hack Assembly code for a VM pop operation */
-string VMTranslator::vm_pop(string segment, int offset){    
+string VMTranslator::vm_pop(string segment, int offset){
+    if(segment == "local") {
+        return "@LCL\nD=M\n@" + to_string(offset) + "\nD=A+D\n@13\nM=D\n@SP\nAM=M-1\nD=M\n@13\nA=M\nM=D\n";
+    }
+    else if(segment == "argument") {
+        return "@ARG\nD=M\n@" + to_string(offset) + "\nD=A+D\n@13\nM=D\n@SP\nAM=M-1\nD=M\n@13\nA=M\nM=D\n";
+    }
+    else if(segment == "this") {
+        return "@THIS\nD=M\n@" + to_string(offset) + "\nD=A+D\n@13\nM=D\n@SP\nAM=M-1\nD=M\n@13\nA=M\nM=D\n";
+    }
+    else if(segment == "that") {
+        return "@THAT\nD=M\n@" + to_string(offset) + "\nD=A+D\n@13\nM=D\n@SP\nAM=M-1\nD=M\n@13\nA=M\nM=D\n";
+    }
+    else if(segment == "pointer") {
+        return "@SP\nAM=M-1\nD=M\n@" + to_string(3+offset) + "\nM=D\n";
+    }
+    else if(segment == "temp") {
+        return "@SP\nAM=M-1\nD=M\n@" + to_string(5+offset) + "\nM=D\n";
+    }
+    else if(segment == "static") {
+        return "@SP\nAM=M-1\nD=M\n@" + to_string(16+offset) + "\nM=D\n";
+    }
+    else if(segment == "constant") {
+        return "@SP\nAM=M-1\n";
+    }
+
     return "";
 }
 

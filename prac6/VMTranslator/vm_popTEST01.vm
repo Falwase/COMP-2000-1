@@ -1,0 +1,9 @@
+push local 2
+push argument 3
+push this 1
+push that 3
+
+pop local 2
+pop argument 3
+pop this 1
+pop that 3
