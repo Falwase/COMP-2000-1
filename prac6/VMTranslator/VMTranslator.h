@@ -2,10 +2,13 @@
 #define VMTRANSLATOR_H
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class VMTranslator {
+
+    private:
 
     public:
 

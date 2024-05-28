@@ -8,7 +8,6 @@ using namespace std;
  * VMTranslator constructor
  */
 VMTranslator::VMTranslator() {
-    // Your code here
 }
 
 /**
@@ -159,15 +158,62 @@ string VMTranslator::vm_if(string label){
 
 /** Generate Hack Assembly code for a VM function operation */
 string VMTranslator::vm_function(string function_name, int n_vars){
-    return "";
+/*
+((function_name))
+@0
+D=A
+
+repeat n_vars times
+@SP
+AM=M+1
+A=A-1
+M=D
+*/
+    string varPusher = "";
+
+    for(int i = 0; i < n_vars; i++) {
+        varPusher = varPusher + "@SP\nAM=M+1\nA=A-1\nM=D\n";
+    }
+
+    return "(" + function_name + ")\n@0\nD=A\n" + varPusher;
 }
 
 /** Generate Hack Assembly code for a VM call operation */
 string VMTranslator::vm_call(string function_name, int n_args){
-    return "";
+
+    string lbl = function_name + "a";
+
+    /*
+    @lbl
+    D=A
+    @SP
+    AM=M+1
+    A=A-1
+    M=D
+    */
+
+    /*
+    @SP
+    D=A
+    @5
+    D=D-A
+    @(n_args)
+    D=D-A
+    */
+
+    return "@" + lbl + "\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n" +
+           "@LCL\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n" +
+           "@ARG\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n" +
+           "@THIS\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n" +
+           "@THAT\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n" +
+           "SP\nD=A\n@5\nD=D-A\n@" + to_string(n_args) + "\nD=D-A\n" +
+           "@SP\nD=M\n@LCL\nM=D\n" +
+           "@" + function_name + "\n0;JMP\n" +
+           "(" + lbl + ")\n";
 }
 
 /** Generate Hack Assembly code for a VM return operation */
 string VMTranslator::vm_return(){
-    return "";
+
+    return "@LCL\nD=M\n@13\nM=D\n@13\nD=M\n@5\nD=D-A\nA=D\nD=M\n@14\nM=D\n@SP\nA=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=A+1\n@SP\nM=D\n@13\nD=M\n@1\nD=D-A\nA=D\nD=M\n@THAT\nM=D\n@13\nD=M\n@2\nD=D-A\nA=D\nD=M\n@THIS\nM=D\n@13\nD=M\n@3\nD=D-A\nA=D\nD=M\n@ARG\nM=D\n@13\nD=M\n@4\nD=D-A\nA=D\nD=M\n@LCL\nM=D\n@14\nA=M\n0;JMP\n";
 }

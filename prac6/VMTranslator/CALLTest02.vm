@@ -1,0 +1,20 @@
+
+push constant 3
+push constant 2
+call sum 2
+pop static 0
+
+label END
+goto END
+
+function sum 2
+push argument 0
+push argument 1
+add
+return
+
+function gthan 2
+push argument 0
+push argument 1
+gt 
+return
