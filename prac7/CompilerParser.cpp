@@ -3,7 +3,7 @@
 #include <iostream>
 
 bool CompilerParser::isIdentifier() {
-    if(current()->getType() == "identifier") {
+    if(self.current()->getType() == "identifier") {
         return true;
     }
     return false;
@@ -14,11 +14,11 @@ bool CompilerParser::isType() {
 }
 
 bool CompilerParser::isOp() {
-    if(current()->getType() != "symbol") {
+    if(self.current()->getType() != "symbol") {
         return false;
     }
 
-    std::string op = current()->getValue();
+    std::string op = self.current()->getValue();
 
     return (op == "+" || op == "-" || op == "*" || op == "/" || op == "&" || op == "|" || op == "<" || op == ">" || op == "=");
 }
@@ -53,10 +53,10 @@ ParseTree* CompilerParser::compileClass() {
     }
     pt->addChild(mustBe("identifier", "MyClass"));
 
-    if(current()->getType() != "stringConstant") {
+    if(self.current()->getType() != "stringConstant") {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     pt->addChild(mustBe("symbol", "{"));
@@ -81,25 +81,25 @@ ParseTree* CompilerParser::compileClass() {
 ParseTree* CompilerParser::compileClassVarDec() {
     ParseTree* pt = new ParseTree("classVarDec", "ClassVarDec");
 
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     if(!isType()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     if(!isIdentifier()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     while(have("symbol", ",")) {
-        pt->addChild(current());
+        pt->addChild(self.current());
         isIdentifier();
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
     }
 
@@ -115,18 +115,18 @@ ParseTree* CompilerParser::compileClassVarDec() {
 ParseTree* CompilerParser::compileSubroutine() {
     ParseTree* pt = new ParseTree("subroutine", "SubroutineDec");
 
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     if(have("keyword", "void") || isType()) {
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
     }
 
     if(!isIdentifier()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     pt->addChild(mustBe("symbol", "("));
@@ -151,12 +151,12 @@ ParseTree* CompilerParser::compileParameterList() {
     }
 
     ParseTree* pt = new ParseTree("parameterList", "ParameterList");
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
     if(!isIdentifier()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     while(1) {
@@ -169,13 +169,13 @@ ParseTree* CompilerParser::compileParameterList() {
         if(!isType()) {
             throw ParseException();
         }
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
 
         if(!isIdentifier()) {
             throw ParseException();
         }
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
     }
 }
@@ -193,7 +193,7 @@ ParseTree* CompilerParser::compileSubroutineBody() {
         pt->addChild(compileVarDec());
     }
 
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     pt->addChild(mustBe("symbol", "}"));
@@ -213,13 +213,13 @@ ParseTree* CompilerParser::compileVarDec() {
     if(!isType()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     if(!isIdentifier()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     while(1) {
@@ -232,7 +232,7 @@ ParseTree* CompilerParser::compileVarDec() {
         if(!isIdentifier()) {
             throw ParseException();
         }
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
     }
 
@@ -282,7 +282,7 @@ ParseTree* CompilerParser::compileLet() {
     if(!isIdentifier()) {
         throw ParseException();
     }
-    pt->addChild(current());
+    pt->addChild(self.current());
     next();
 
     if(have("symbol", "[")) {
@@ -414,7 +414,7 @@ ParseTree* CompilerParser::compileExpression() {
             return pt;
         }
 
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
 
         pt->addChild(compileTerm());
@@ -428,17 +428,17 @@ ParseTree* CompilerParser::compileExpression() {
 ParseTree* CompilerParser::compileTerm() {
     ParseTree* pt = new ParseTree("term", "Term");
 
-    std::string type = current()->getType();
+    std::string type = self.current()->getType();
 
     if(type == "integerConstant" || type == "stringConstant") {
-        pt->addChild(current());
+        pt->addChild(self.current());
         return pt;
     }
 
-    std::string val = current()->getValue();
+    std::string val = self.current()->getValue();
 
     if(val == "true" || val == "false" || val == "null" || val == "this") {
-        pt->addChild(current());
+        pt->addChild(self.current());
         return pt;
     }
 
@@ -453,7 +453,7 @@ ParseTree* CompilerParser::compileTerm() {
     }
 
     if(isIdentifier()) {
-        Token* temp = new Token(current()->getType(), current()->getValue());
+        Token* temp = new Token(self.current()->getType(), self.current()->getValue());
         next();
 
         if(have("symbol", "[")) {
@@ -488,7 +488,7 @@ ParseTree* CompilerParser::compileTerm() {
             if(!isIdentifier()) {
                 throw ParseException();
             }
-            pt->addChild(current());
+            pt->addChild(self.current());
             next();
 
             pt->addChild(mustBe("symbol", "("));
@@ -505,7 +505,7 @@ ParseTree* CompilerParser::compileTerm() {
     }
 
     if(have("symbol", "-") || have("symbol", "~")) {
-        pt->addChild(current());
+        pt->addChild(self.current());
         next();
     }
 
@@ -548,7 +548,7 @@ void CompilerParser::next(){
  * Return the current token
  * @return the Token
  */
-Token* CompilerParser::current(){
+Token* CompilerParser::self.current(){
     return tokens.front();
 }
 
@@ -557,7 +557,7 @@ Token* CompilerParser::current(){
  * @return true if a match, false otherwise
  */
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){  
-    Token* t = current();
+    Token* t = self.current();
     return (t->getType() == expectedType) && (t->getValue() == expectedValue);
 }
 
